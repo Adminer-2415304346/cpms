@@ -118,7 +118,7 @@ cpms/
 │   ├── schema.sql               # 完整建库建表脚本
 │   ├── 项目开发总结.md            # 数据库 + API 设计总结
 │   └── 问题排查日志.md            # 启动排错记录
-├── photo/                       # ProcessOn 绘制图表
+├── photo/                       # Mermaid 绘制图表
 ├── cpms-backend/                # Spring Boot 后端
 │   ├── pom.xml
 │   └── src/main/java/com/cpms/
@@ -171,7 +171,7 @@ cpms/
 
 ---
 
-## 📝 课程设计报告结构
+## 📝 课设素材结构
 
 ```
 1. 需求分析       → docs/需求分析.md
