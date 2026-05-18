@@ -5,7 +5,7 @@
     </div>
     <a-list :dataSource="data" :loading="loading" itemLayout="vertical">
       <template #renderItem="{ item }">
-        <a-list-item>
+        <a-list-item class="announce-item">
           <a-list-item-meta>
             <template #title>
               <span style="font-size:15px;font-weight:500">{{ item.title }}</span>
@@ -59,4 +59,24 @@ onMounted(fetch)
 
 <style scoped>
 .toolbar { margin-bottom: 16px; }
+
+/* 公告列表项交错入场 */
+.announce-item {
+  animation: item-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.announce-item:nth-child(1) { animation-delay: 0.04s; }
+.announce-item:nth-child(2) { animation-delay: 0.08s; }
+.announce-item:nth-child(3) { animation-delay: 0.12s; }
+.announce-item:nth-child(4) { animation-delay: 0.16s; }
+.announce-item:nth-child(5) { animation-delay: 0.20s; }
+.announce-item:nth-child(6) { animation-delay: 0.24s; }
+.announce-item:nth-child(7) { animation-delay: 0.28s; }
+.announce-item:nth-child(8) { animation-delay: 0.32s; }
+.announce-item:nth-child(9) { animation-delay: 0.36s; }
+.announce-item:nth-child(10) { animation-delay: 0.40s; }
+
+@keyframes item-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 </style>
