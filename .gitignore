@@ -1,0 +1,30 @@
+# ======= Java =======
+*.class
+*.jar
+*.war
+*.ear
+target/
+!.mvn/wrapper/maven-wrapper.jar
+*.log
+
+# ======= Node / Vue =======
+node_modules/
+dist/
+.vite/
+*.local
+
+# ======= IDE =======
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+
+# ======= OS =======
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ======= Temp =======
+*.tmp
+pptx_content.txt
