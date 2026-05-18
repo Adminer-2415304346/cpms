@@ -1,0 +1,108 @@
+/* ====== CPMS 全局样式 ====== */
+
+/* 卡片 */
+.ant-card {
+  border-radius: 12px !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.03) !important;
+  border: 1px solid rgba(0,0,0,0.04) !important;
+  transition: box-shadow 0.3s ease;
+}
+.ant-card:hover {
+  box-shadow: 0 4px 20px rgba(124,58,237,0.06) !important;
+}
+
+/* 表格 */
+.ant-table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+.ant-table-thead > tr > th {
+  background: #faf5ff !important;
+  color: #6d28d9 !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  border-bottom: 2px solid #ede9fe !important;
+}
+.ant-table-tbody > tr:hover > td {
+  background: #faf5ff !important;
+}
+
+/* 主按钮 */
+.ant-btn-primary {
+  background: linear-gradient(135deg, #7c3aed, #4f46e5) !important;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(124,58,237,0.25) !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+}
+.ant-btn-primary:hover {
+  background: linear-gradient(135deg, #8b5cf6, #6366f1) !important;
+  box-shadow: 0 4px 16px rgba(124,58,237,0.35) !important;
+  transform: translateY(-1px);
+}
+
+/* 标签 */
+.ant-tag {
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+}
+
+/* 模态框 */
+.ant-modal-header {
+  border-bottom: 1px solid #f3f4f6 !important;
+  padding: 18px 24px !important;
+}
+.ant-modal-title {
+  font-weight: 600 !important;
+  color: #1f2937 !important;
+}
+.ant-modal-footer {
+  border-top: 1px solid #f3f4f6 !important;
+}
+
+/* 输入框 */
+.ant-input,
+.ant-input-affix-wrapper,
+.ant-picker,
+.ant-select-selector {
+  border-radius: 8px !important;
+  border-color: #e5e7eb !important;
+  transition: all 0.3s ease !important;
+}
+.ant-input:hover,
+.ant-input-affix-wrapper:hover,
+.ant-picker:hover,
+.ant-select-selector:hover {
+  border-color: #a78bfa !important;
+}
+.ant-input:focus,
+.ant-input-affix-wrapper-focused,
+.ant-picker-focused,
+.ant-select-focused .ant-select-selector {
+  border-color: #7c3aed !important;
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.08) !important;
+}
+
+/* 面包屑 */
+.ant-breadcrumb {
+  font-size: 13px;
+}
+
+/* 分页 */
+.ant-pagination-item-active {
+  border-color: #7c3aed !important;
+}
+.ant-pagination-item-active a {
+  color: #7c3aed !important;
+}
+
+/* 下拉菜单 */
+.ant-dropdown-menu-item:hover {
+  background: #faf5ff !important;
+}
+
+/* 弹出确认 */
+.ant-popconfirm-buttons .ant-btn-primary {
+  background: #ef4444 !important;
+  box-shadow: 0 2px 8px rgba(239,68,68,0.25) !important;
+}

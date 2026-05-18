@@ -232,8 +232,8 @@ SELECT
 FROM bill b
 JOIN room r        ON b.room_id = r.room_id
 JOIN building bu   ON r.building_id = bu.building_id
-JOIN owner_room or ON r.room_id = or.room_id
-JOIN owner o       ON or.owner_id = o.owner_id
+JOIN owner_room owr ON r.room_id = owr.room_id
+JOIN owner o        ON owr.owner_id = o.owner_id
 WHERE b.status IN ('unpaid', 'overdue')
 ORDER BY b.due_date ASC;
 
