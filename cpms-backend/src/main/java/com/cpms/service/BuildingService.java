@@ -1,6 +1,7 @@
 package com.cpms.service;
 
 import com.cpms.entity.Building;
+import com.cpms.exception.NotFoundException;
 import com.cpms.repository.BuildingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ public class BuildingService {
 
     public Building getById(Long id) {
         return buildingRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("楼栋不存在"));
+                .orElseThrow(() -> new NotFoundException("楼栋不存在"));
     }
 
     public Building create(Building building) {

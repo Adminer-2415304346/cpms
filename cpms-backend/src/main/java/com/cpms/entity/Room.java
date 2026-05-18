@@ -1,5 +1,6 @@
 package com.cpms.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.math.BigDecimal;
@@ -7,6 +8,7 @@ import java.math.BigDecimal;
 @Data
 @Entity
 @Table(name = "room")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Room {
 
     @Id

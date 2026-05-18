@@ -2,6 +2,7 @@ package com.cpms.service;
 
 import com.cpms.entity.Owner;
 import com.cpms.entity.User;
+import com.cpms.exception.NotFoundException;
 import com.cpms.repository.OwnerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,12 +21,12 @@ public class OwnerService {
 
     public Owner getById(Long id) {
         return ownerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("业主不存在"));
+                .orElseThrow(() -> new NotFoundException("业主不存在"));
     }
 
     public Owner getByUserId(Long userId) {
         return ownerRepository.findByUser_UserId(userId)
-                .orElseThrow(() -> new RuntimeException("业主信息不存在"));
+                .orElseThrow(() -> new NotFoundException("业主信息不存在"));
     }
 
     public Owner create(Owner owner) {

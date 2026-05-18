@@ -1,6 +1,7 @@
 package com.cpms.service;
 
 import com.cpms.entity.Announcement;
+import com.cpms.exception.NotFoundException;
 import com.cpms.repository.AnnouncementRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ public class AnnouncementService {
 
     public Announcement getById(Long id) {
         return announcementRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("公告不存在"));
+                .orElseThrow(() -> new NotFoundException("公告不存在"));
     }
 
     public Announcement create(Announcement announcement) {

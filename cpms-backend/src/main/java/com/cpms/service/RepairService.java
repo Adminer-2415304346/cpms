@@ -1,6 +1,7 @@
 package com.cpms.service;
 
 import com.cpms.entity.Repair;
+import com.cpms.exception.NotFoundException;
 import com.cpms.repository.RepairRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class RepairService {
 
     public Repair getById(Long id) {
         return repairRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("报修工单不存在"));
+                .orElseThrow(() -> new NotFoundException("报修工单不存在"));
     }
 
     public Repair create(Repair repair) {

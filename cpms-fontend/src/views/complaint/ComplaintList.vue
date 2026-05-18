@@ -73,7 +73,13 @@ const cols = [
 const fetch = async () => {
   loading.value = true
   try {
-    let url = '/complaints'; if (sFilter.value) url += `?status=${sFilter.value}`
+    let url = '/complaints'
+    if (sFilter.value) {
+      url += `?status=${sFilter.value}`
+    } else if (isOwner.value) {
+      const owner = await http.get(`/owners/by-user/${store.userId}`)
+      if (owner) url += `?ownerId=${owner.ownerId}`
+    }
     data.value = await http.get(url)
   } catch {}; loading.value = false
 }

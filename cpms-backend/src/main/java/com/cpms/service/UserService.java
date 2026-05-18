@@ -3,6 +3,7 @@ package com.cpms.service;
 import com.cpms.dto.LoginRequest;
 import com.cpms.dto.LoginResponse;
 import com.cpms.entity.User;
+import com.cpms.exception.NotFoundException;
 import com.cpms.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,7 @@ public class UserService {
 
     public User update(Long id, User updated) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("用户不存在"));
+                .orElseThrow(() -> new NotFoundException("用户不存在"));
         if (updated.getRealName() != null) user.setRealName(updated.getRealName());
         if (updated.getPhone() != null) user.setPhone(updated.getPhone());
         if (updated.getEmail() != null) user.setEmail(updated.getEmail());
@@ -53,7 +54,7 @@ public class UserService {
 
     public User getById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("用户不存在"));
+                .orElseThrow(() -> new NotFoundException("用户不存在"));
     }
 
     public List<User> listByRole(String role) {

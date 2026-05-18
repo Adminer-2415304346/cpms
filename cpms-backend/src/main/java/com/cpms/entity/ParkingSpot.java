@@ -1,11 +1,13 @@
 package com.cpms.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "parking_spot")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ParkingSpot {
 
     @Id

@@ -4,6 +4,7 @@ import com.cpms.entity.Bill;
 import com.cpms.entity.Payment;
 import com.cpms.entity.Room;
 import com.cpms.entity.User;
+import com.cpms.exception.NotFoundException;
 import com.cpms.repository.BillRepository;
 import com.cpms.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,7 @@ public class BillService {
 
     public Bill getById(Long id) {
         return billRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("账单不存在"));
+                .orElseThrow(() -> new NotFoundException("账单不存在"));
     }
 
     public Bill create(Bill bill) {
@@ -66,6 +67,7 @@ public class BillService {
         if ("paid".equals(bill.getStatus())) {
             throw new RuntimeException("该账单已缴费");
         }
+        bill.setStatus("paid");
         Payment payment = new Payment();
         payment.setBill(bill);
         payment.setAmount(bill.getAmount());

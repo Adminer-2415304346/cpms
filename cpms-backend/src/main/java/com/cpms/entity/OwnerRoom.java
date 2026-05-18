@@ -1,5 +1,6 @@
 package com.cpms.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDate;
@@ -7,6 +8,7 @@ import java.time.LocalDate;
 @Data
 @Entity
 @Table(name = "owner_room")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class OwnerRoom {
 
     @Id

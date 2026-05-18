@@ -2,6 +2,7 @@ package com.cpms.service;
 
 import com.cpms.entity.Building;
 import com.cpms.entity.Room;
+import com.cpms.exception.NotFoundException;
 import com.cpms.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class RoomService {
 
     public Room getById(Long id) {
         return roomRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("房间不存在"));
+                .orElseThrow(() -> new NotFoundException("房间不存在"));
     }
 
     public Room create(Room room) {

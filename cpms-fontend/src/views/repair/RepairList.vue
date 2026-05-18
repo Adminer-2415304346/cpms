@@ -86,8 +86,12 @@ const fetch = async () => {
   loading.value = true
   try {
     let url = '/repairs'
-    if (sFilter.value) url += `?status=${sFilter.value}`
-    else if (isOwner.value) url += `?ownerId=${store.userId}`
+    if (sFilter.value) {
+      url += `?status=${sFilter.value}`
+    } else if (isOwner.value) {
+      const owner = await http.get(`/owners/by-user/${store.userId}`)
+      if (owner) url += `?ownerId=${owner.ownerId}`
+    }
     data.value = await http.get(url)
   } catch {}; loading.value = false
 }

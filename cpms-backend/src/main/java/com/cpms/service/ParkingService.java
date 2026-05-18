@@ -2,6 +2,7 @@ package com.cpms.service;
 
 import com.cpms.entity.ParkingSpot;
 import com.cpms.entity.Vehicle;
+import com.cpms.exception.NotFoundException;
 import com.cpms.repository.ParkingSpotRepository;
 import com.cpms.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class ParkingService {
 
     public ParkingSpot getSpotById(Long id) {
         return spotRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("停车位不存在"));
+                .orElseThrow(() -> new NotFoundException("停车位不存在"));
     }
 
     public ParkingSpot createSpot(ParkingSpot spot) {
@@ -57,7 +58,7 @@ public class ParkingService {
 
     public Vehicle getVehicleById(Long id) {
         return vehicleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("车辆不存在"));
+                .orElseThrow(() -> new NotFoundException("车辆不存在"));
     }
 
     public Vehicle createVehicle(Vehicle vehicle) {

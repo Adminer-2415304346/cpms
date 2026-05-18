@@ -1,6 +1,7 @@
 package com.cpms.service;
 
 import com.cpms.entity.Complaint;
+import com.cpms.exception.NotFoundException;
 import com.cpms.repository.ComplaintRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class ComplaintService {
 
     public Complaint getById(Long id) {
         return complaintRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("投诉建议不存在"));
+                .orElseThrow(() -> new NotFoundException("投诉建议不存在"));
     }
 
     public Complaint create(Complaint complaint) {
