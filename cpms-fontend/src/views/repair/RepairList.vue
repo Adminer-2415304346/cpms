@@ -51,6 +51,25 @@
         <a-form-item label="问题描述" required><a-textarea v-model:value="f.description" :rows="3" /></a-form-item>
       </a-form>
     </a-modal>
+
+    <a-modal v-model:open="detailOpen" title="报修详情" :footer="null" width="520px">
+      <div class="detail-card">
+        <div class="detail-header">
+          <a-tag :color="statusColor(detailItem.status)" style="font-size:14px;padding:2px 12px">{{ statusLabel(detailItem.status) }}</a-tag>
+          <a-tag :color="detailItem.urgency==='high'?'red':detailItem.urgency==='medium'?'orange':'blue'">{{ {high:'紧急',medium:'一般',low:'不急'}[detailItem.urgency] || '-' }}</a-tag>
+        </div>
+        <a-descriptions :column="1" size="small" bordered class="detail-desc">
+          <a-descriptions-item label="报修编号">{{ detailItem.repairId }}</a-descriptions-item>
+          <a-descriptions-item label="业主">{{ detailItem.owner?.name || '-' }}</a-descriptions-item>
+          <a-descriptions-item label="楼栋房间">{{ detailItem.room?.building?.buildingName || '' }} {{ detailItem.room?.roomNumber || '' }}</a-descriptions-item>
+          <a-descriptions-item label="问题描述">
+            <div style="white-space:pre-wrap;line-height:1.7">{{ detailItem.description }}</div>
+          </a-descriptions-item>
+          <a-descriptions-item label="提交时间">{{ detailItem.createdAt }}</a-descriptions-item>
+          <a-descriptions-item v-if="detailItem.updatedAt" label="更新时间">{{ detailItem.updatedAt }}</a-descriptions-item>
+        </a-descriptions>
+      </div>
+    </a-modal>
   </a-card>
 </template>
 
@@ -67,6 +86,7 @@ const isStaff = computed(() => store.role === 'staff')
 const isOwner = computed(() => store.role === 'owner')
 
 const data = ref([]), myRooms = ref([]), loading = ref(false), open = ref(false), saving = ref(false), sFilter = ref(null)
+const detailOpen = ref(false), detailItem = ref({})
 const f = reactive({ roomId: null, urgency: 'low', description: '' })
 
 const cols = [
@@ -122,10 +142,7 @@ const onSave = async () => {
   } catch {}; saving.value = false
 }
 
-const showDetail = (r) => {
-  const s = statusLabel(r.status)
-  message.info(`${r.description}\n状态: ${s}\n时间: ${r.createdAt}`)
-}
+const showDetail = (r) => { detailItem.value = r; detailOpen.value = true }
 const doAssign = async (r) => { await http.put(`/repairs/${r.repairId}/assign`, { staffId: store.userId }); message.success('派工成功'); fetch() }
 const doStart = async (r) => { await http.put(`/repairs/${r.repairId}/start`); message.success('开始处理'); fetch() }
 const doComplete = async (r) => { await http.put(`/repairs/${r.repairId}/complete`); message.success('标记完成'); fetch() }
@@ -135,4 +152,11 @@ onMounted(fetch)
 
 <style scoped>
 .toolbar { margin-bottom: 16px; }
+.detail-card { padding: 4px 0; }
+.detail-header { margin-bottom: 16px; display: flex; gap: 8px; }
+.detail-desc :deep(.ant-descriptions-item-label) {
+  font-weight: 500;
+  color: #666;
+  width: 100px;
+}
 </style>

@@ -34,6 +34,26 @@
       </a-form>
     </a-modal>
 
+    <a-modal v-model:open="detailOpen" title="投诉/建议详情" :footer="null" width="520px">
+      <div class="detail-card">
+        <div class="detail-header">
+          <a-tag :color="detailItem.type==='complaint'?'red':'blue'" style="font-size:14px;padding:2px 12px">{{ detailItem.type==='complaint'?'投诉':'建议' }}</a-tag>
+          <a-tag :color="detailItem.status==='resolved'?'green':detailItem.status==='processing'?'blue':'orange'">{{ {pending:'待处理',processing:'处理中',resolved:'已解决'}[detailItem.status] }}</a-tag>
+          <a-tag v-if="detailItem.isAnonymous" color="default">匿名</a-tag>
+        </div>
+        <a-descriptions :column="1" size="small" bordered class="detail-desc">
+          <a-descriptions-item label="编号">{{ detailItem.complaintId }}</a-descriptions-item>
+          <a-descriptions-item label="内容">
+            <div style="white-space:pre-wrap;line-height:1.7">{{ detailItem.content }}</div>
+          </a-descriptions-item>
+          <a-descriptions-item v-if="detailItem.reply" label="回复">
+            <div style="white-space:pre-wrap;line-height:1.7;color:#10b981">{{ detailItem.reply }}</div>
+          </a-descriptions-item>
+          <a-descriptions-item label="提交时间">{{ detailItem.createdAt }}</a-descriptions-item>
+        </a-descriptions>
+      </div>
+    </a-modal>
+
     <a-modal v-model:open="replyOpen" title="回复投诉/建议" @ok="doReply" :confirmLoading="replying">
       <a-descriptions :column="1" size="small">
         <a-descriptions-item label="类型">{{ replyItem.type === 'complaint' ? '投诉' : '建议' }}</a-descriptions-item>
@@ -57,6 +77,7 @@ const isStaff = computed(() => store.role === 'staff')
 const isOwner = computed(() => store.role === 'owner')
 
 const data = ref([]), loading = ref(false), open = ref(false), saving = ref(false), sFilter = ref(null)
+const detailOpen = ref(false), detailItem = ref({})
 const replyOpen = ref(false), replying = ref(false), replyText = ref(''), replyItem = ref({})
 const f = reactive({ type: 'complaint', content: '', isAnonymous: false })
 
@@ -98,7 +119,7 @@ const doReply = async () => {
   try { await http.put(`/complaints/${replyItem.value.complaintId}/reply`, { reply: replyText.value }); message.success('回复成功'); replyOpen.value = false; fetch() } catch {}
   replying.value = false
 }
-const showDetail = (r) => message.info(`${r.type==='complaint'?'投诉':'建议'}: ${r.content}${r.reply ? '\n回复: '+r.reply : ''}`)
+const showDetail = (r) => { detailItem.value = r; detailOpen.value = true }
 const handleDel = async (id) => { await http.delete(`/complaints/${id}`); message.success('删除成功'); fetch() }
 onMounted(fetch)
 </script>
@@ -106,4 +127,11 @@ onMounted(fetch)
 <style scoped>
 .toolbar { margin-bottom: 16px; }
 .danger-link { color: #ff4d4f; }
+.detail-card { padding: 4px 0; }
+.detail-header { margin-bottom: 16px; display: flex; gap: 8px; }
+.detail-desc :deep(.ant-descriptions-item-label) {
+  font-weight: 500;
+  color: #666;
+  width: 80px;
+}
 </style>

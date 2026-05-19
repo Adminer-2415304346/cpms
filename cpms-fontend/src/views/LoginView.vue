@@ -64,7 +64,6 @@
               placeholder="密码"
               autocomplete="current-password"
               class="custom-input"
-              @keyup.enter="handleLogin"
             >
               <template #prefix>
                 <LockOutlined />
