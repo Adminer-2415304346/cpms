@@ -4,6 +4,23 @@
 
 ---
 
+## 2026-05-19 — 第九轮：种子数据扩充 & 登录修复 & 首页统计实时化
+
+### 新增 (Added)
+- **种子数据大幅扩充**: 用户 6→20、业主 3→15、楼栋 2→5、房间 5→50、停车位 3→20、车辆 1→12、账单 4→28、缴费 1→9、报修 2→10、投诉 1→8、公告 2→6
+- **仪表盘统计 API**: `GET /api/dashboard/stats` — 实时查询楼栋数、业主数、待处理报修数、公告数
+- `DashboardController` + `DashboardService` + `DashboardStats` DTO
+
+### 修复 (Fixed)
+- **登录 500 错误**: `UserService.login()` 明文密码与 MD5 哈希直接比较导致永远不匹配，现对输入密码做 MD5 后比较
+- **用户密码安全**: `create()` 和 `update()` 存储密码前统一 MD5 哈希
+- **首页硬编码数据**: DashboardView 统计数字从固定 `[2,3,1,2]` 改为调用 API 获取实时数据并驱动入场动画
+
+### 修改 (Changed)
+- `RepairRepository` 增加 `countByStatusIn()` 方法
+
+---
+
 ## 2026-05-19 — 第八轮：业主端美学重设计 — Serene Residence
 
 ### 修改 (Changed)

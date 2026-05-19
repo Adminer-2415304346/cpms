@@ -10,4 +10,5 @@ public interface RepairRepository extends JpaRepository<Repair, Long> {
     List<Repair> findByOwner_OwnerId(Long ownerId);
     List<Repair> findByStatus(String status);
     List<Repair> findByStaff_UserId(Long staffId);
+    long countByStatusIn(List<String> statuses);
 }

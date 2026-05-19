@@ -7,6 +7,7 @@ import com.cpms.exception.NotFoundException;
 import com.cpms.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 import java.util.List;
 
 @Service
@@ -18,7 +19,8 @@ public class UserService {
     public LoginResponse login(LoginRequest req) {
         User user = userRepository.findByUsername(req.getUsername())
                 .orElseThrow(() -> new RuntimeException("用户名或密码错误"));
-        if (!user.getPassword().equals(req.getPassword())) {
+        String hashed = DigestUtils.md5DigestAsHex(req.getPassword().getBytes());
+        if (!user.getPassword().equals(hashed)) {
             throw new RuntimeException("用户名或密码错误");
         }
         if ("disabled".equals(user.getStatus())) {
@@ -32,6 +34,9 @@ public class UserService {
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new RuntimeException("用户名已存在");
         }
+        if (user.getPassword() != null && !user.getPassword().isBlank()) {
+            user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
+        }
         return userRepository.save(user);
     }
 
@@ -43,7 +48,7 @@ public class UserService {
         if (updated.getEmail() != null) user.setEmail(updated.getEmail());
         if (updated.getStatus() != null) user.setStatus(updated.getStatus());
         if (updated.getPassword() != null && !updated.getPassword().isBlank()) {
-            user.setPassword(updated.getPassword());
+            user.setPassword(DigestUtils.md5DigestAsHex(updated.getPassword().getBytes()));
         }
         return userRepository.save(user);
     }

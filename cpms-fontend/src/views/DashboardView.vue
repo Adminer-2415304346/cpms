@@ -62,6 +62,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { HomeOutlined, TeamOutlined, DollarOutlined, ToolOutlined, SoundOutlined, RightOutlined } from '@ant-design/icons-vue'
 import { useUserStore } from '@/stores/user'
+import http from '@/api'
 import dayjs from 'dayjs'
 
 const userStore = useUserStore()
@@ -80,7 +81,7 @@ const timeGreeting = computed(() => {
   return '晚上好'
 })
 
-const targets = [2, 3, 1, 2]
+const targets = ref([0, 0, 0, 0])
 const animatedValues = ref([0, 0, 0, 0])
 
 const animateCount = (index, target, duration = 600) => {
@@ -95,8 +96,14 @@ const animateCount = (index, target, duration = 600) => {
   requestAnimationFrame(tick)
 }
 
-onMounted(() => {
-  targets.forEach((target, i) => {
+onMounted(async () => {
+  try {
+    const { buildings, owners, pendingRepairs, announcements } = await http.get('/dashboard/stats')
+    targets.value = [buildings, owners, pendingRepairs, announcements]
+  } catch {
+    // fallback: keep zero
+  }
+  targets.value.forEach((target, i) => {
     setTimeout(() => animateCount(i, target), 100 + i * 60)
   })
 })
