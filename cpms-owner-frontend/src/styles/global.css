@@ -1,0 +1,314 @@
+/* ============================================
+   CPMS 业主端 — 全局主题
+   策略: Restrained (单色强调, 功能优先)
+   ============================================ */
+
+:root {
+  --cpms-accent: #7c3aed;
+  --cpms-accent-hover: #6d28d9;
+  --cpms-accent-soft: #f5f0ff;
+  --cpms-warm: #f59e0b;
+  --cpms-warm-soft: #fffbeb;
+  --cpms-bg: #faf9f7;
+  --cpms-surface: #ffffff;
+  --cpms-border: #e8e5e0;
+  --cpms-text: #1e1b2e;
+  --cpms-text-secondary: #4b5563;
+  --cpms-text-muted: #787580;
+  --cpms-success: #10b981;
+  --cpms-danger: #ef4444;
+  --cpms-radius: 12px;
+  --cpms-radius-sm: 8px;
+  --cpms-shadow: 0 1px 3px rgba(0,0,0,.06);
+  --cpms-shadow-hover: 0 4px 12px rgba(0,0,0,.08);
+}
+
+body {
+  margin: 0;
+  background: var(--cpms-bg);
+  color: var(--cpms-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans SC", sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================
+   Cards
+   ============================================ */
+
+.ant-card {
+  border-radius: var(--cpms-radius);
+  box-shadow: var(--cpms-shadow);
+  border: 1px solid var(--cpms-border);
+  transition: box-shadow 0.2s ease;
+}
+.ant-card:hover {
+  box-shadow: var(--cpms-shadow-hover);
+}
+.ant-card-head {
+  border-bottom: 1px solid var(--cpms-border);
+  padding: 16px 24px;
+}
+.ant-card-head-title {
+  font-weight: 600;
+  color: var(--cpms-text);
+}
+.ant-card-body {
+  padding: 24px;
+}
+
+/* ============================================
+   Tables
+   ============================================ */
+
+.ant-table-thead > tr > th {
+  background: #faf9f7;
+  color: var(--cpms-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--cpms-border);
+  padding: 12px 16px;
+}
+.ant-table-tbody > tr > td {
+  border-bottom: 1px solid #f0ede8;
+  padding: 12px 16px;
+}
+.ant-table-tbody > tr:hover > td {
+  background: var(--cpms-accent-soft) !important;
+}
+
+/* ============================================
+   Buttons
+   ============================================ */
+
+.ant-btn {
+  border-radius: var(--cpms-radius-sm);
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+.ant-btn-primary {
+  background: var(--cpms-accent);
+  border-color: var(--cpms-accent);
+  box-shadow: none;
+}
+.ant-btn-primary:hover {
+  background: var(--cpms-accent-hover) !important;
+  border-color: var(--cpms-accent-hover) !important;
+}
+.ant-btn-primary:active {
+  transform: scale(0.97);
+}
+.ant-btn-default {
+  border-color: var(--cpms-border);
+  color: var(--cpms-text-secondary);
+}
+.ant-btn-default:hover {
+  border-color: var(--cpms-accent);
+  color: var(--cpms-accent);
+}
+
+/* ============================================
+   Tags
+   ============================================ */
+
+.ant-tag {
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  border: none;
+  padding: 2px 10px;
+  line-height: 20px;
+}
+
+/* ============================================
+   Modal
+   ============================================ */
+
+.ant-modal-content {
+  border-radius: var(--cpms-radius);
+}
+.ant-modal-header {
+  border-radius: var(--cpms-radius) var(--cpms-radius) 0 0;
+  border-bottom: 1px solid var(--cpms-border);
+  padding: 20px 24px;
+}
+.ant-modal-title {
+  font-weight: 600;
+}
+.ant-modal-body {
+  padding: 24px;
+}
+.ant-modal-footer {
+  border-top: 1px solid var(--cpms-border);
+  padding: 16px 24px;
+}
+
+/* ============================================
+   Input / Select
+   ============================================ */
+
+.ant-input,
+.ant-select-selector,
+.ant-picker,
+.ant-input-affix-wrapper {
+  border-radius: var(--cpms-radius-sm) !important;
+  border-color: var(--cpms-border) !important;
+}
+.ant-input:focus,
+.ant-select-focused .ant-select-selector,
+.ant-picker-focused,
+.ant-input-affix-wrapper-focused {
+  border-color: var(--cpms-accent) !important;
+  box-shadow: 0 0 0 2px rgba(124,58,237,.1) !important;
+}
+
+/* ============================================
+   Pagination
+   ============================================ */
+
+.ant-pagination-item-active {
+  border-color: var(--cpms-accent);
+  background: var(--cpms-accent);
+}
+.ant-pagination-item-active a {
+  color: #fff;
+}
+.ant-pagination-item:hover {
+  border-color: var(--cpms-accent);
+}
+
+/* ============================================
+   Steps
+   ============================================ */
+
+.ant-steps-item-process .ant-steps-item-icon {
+  background: var(--cpms-accent);
+  border-color: var(--cpms-accent);
+}
+.ant-steps-item-finish .ant-steps-item-icon {
+  border-color: var(--cpms-accent);
+}
+.ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon {
+  color: var(--cpms-accent);
+}
+.ant-steps-item-finish > .ant-steps-item-content > .ant-steps-item-title::after {
+  background: var(--cpms-accent);
+}
+
+/* ============================================
+   Page header
+   ============================================ */
+
+.page-header {
+  margin-bottom: 24px;
+}
+.page-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--cpms-text);
+}
+.page-header p {
+  margin: 4px 0 0;
+  color: var(--cpms-text-muted);
+  font-size: 14px;
+}
+
+/* ============================================
+   Stats card
+   ============================================ */
+
+.stat-card {
+  text-align: center;
+  padding: 8px 0;
+}
+.stat-card .stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--cpms-text);
+  font-feature-settings: "tnum";
+  letter-spacing: -0.5px;
+}
+.stat-card .stat-currency {
+  font-size: 16px;
+  font-weight: 500;
+  margin-right: 2px;
+  color: var(--cpms-text-muted);
+}
+.stat-card .stat-label {
+  font-size: 13px;
+  color: var(--cpms-text-muted);
+  margin-top: 4px;
+}
+.stat-card .stat-highlight {
+  color: var(--cpms-warm);
+}
+
+/* ============================================
+   Welcome banner
+   ============================================ */
+
+.welcome-banner {
+  background: linear-gradient(135deg, #faf9f7 0%, #f5f3f0 100%);
+  border: 1px solid var(--cpms-border);
+  border-radius: var(--cpms-radius);
+  padding: 28px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.welcome-greeting {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--cpms-text);
+  margin: 0;
+}
+.welcome-date {
+  font-size: 14px;
+  color: var(--cpms-text-muted);
+  margin: 4px 0 0;
+}
+.welcome-emoji {
+  font-size: 28px;
+}
+
+/* ============================================
+   Section title
+   ============================================ */
+
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.section-title h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--cpms-text);
+}
+.section-title .ant-btn-link {
+  font-weight: 500;
+  color: var(--cpms-accent);
+}
+
+/* ============================================
+   Amount display
+   ============================================ */
+
+.amount-large {
+  font-size: 24px;
+  font-weight: 700;
+  font-feature-settings: "tnum";
+  letter-spacing: -0.5px;
+}
+.amount-large .amount-unit {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--cpms-text-muted);
+}
