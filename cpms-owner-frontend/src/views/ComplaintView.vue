@@ -1,6 +1,6 @@
 <template>
   <div class="complaint-page">
-    <div class="page-header" style="display:flex; justify-content:space-between; align-items:flex-start">
+    <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start">
       <div>
         <h2>投诉建议</h2>
         <p>提交投诉或建议，物业将尽快处理</p>
@@ -8,34 +8,25 @@
       <a-button type="primary" @click="openSubmit">提交投诉/建议</a-button>
     </div>
 
-    <a-card v-for="c in complaints" :key="c.complaintId" style="margin-bottom:12px" size="small">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start">
-        <div style="flex:1">
-          <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px">
-            <a-tag :color="c.type === 'complaint' ? 'red' : 'blue'">
-              {{ c.type === 'complaint' ? '投诉' : '建议' }}
-            </a-tag>
-            <a-tag v-if="c.isAnonymous" size="small">匿名</a-tag>
-            <a-tag :color="statusTagColor(c.status)" size="small">
-              {{ statusLabel(c.status) }}
-            </a-tag>
-            <span style="font-weight:600">{{ truncate(c.content, 40) }}</span>
-          </div>
-          <div class="complaint-content" v-if="c.content">{{ c.content }}</div>
-          <div class="complaint-reply" v-if="c.reply">
-            <span class="reply-label">物业回复：</span>{{ c.reply }}
-          </div>
-          <div style="font-size:12px; color:#787580; margin-top:8px">
-            {{ dayjs(c.createdAt).format('YYYY-MM-DD HH:mm') }}
-            <span v-if="c.repliedAt"> · 回复于 {{ dayjs(c.repliedAt).format('YYYY-MM-DD HH:mm') }}</span>
-          </div>
-        </div>
+    <div v-for="c in complaints" :key="c.complaintId" class="complaint-card">
+      <div class="complaint-header">
+        <a-tag :color="c.type === 'complaint' ? 'red' : 'blue'" size="small">
+          {{ c.type === 'complaint' ? '投诉' : '建议' }}
+        </a-tag>
+        <a-tag v-if="c.isAnonymous" size="small" style="color:var(--c-muted)">匿名</a-tag>
+        <a-tag :color="stsColor(c.status)" size="small">{{ stsLabel(c.status) }}</a-tag>
+        <span class="complaint-time">{{ dayjs(c.createdAt).format('YYYY-MM-DD HH:mm') }}</span>
       </div>
-    </a-card>
+      <p class="complaint-body">{{ c.content }}</p>
+      <div v-if="c.reply" class="complaint-reply">
+        <span class="reply-label">物业回复</span>
+        <p class="reply-text">{{ c.reply }}</p>
+        <span class="reply-time" v-if="c.repliedAt">{{ dayjs(c.repliedAt).format('YYYY-MM-DD HH:mm') }}</span>
+      </div>
+    </div>
 
     <a-empty v-if="complaints.length === 0" description="暂无投诉记录" />
 
-    <!-- 提交 Modal -->
     <a-modal v-model:open="submitModal.open" title="提交投诉/建议" @ok="doSubmit" :confirmLoading="submitModal.loading">
       <a-form layout="vertical">
         <a-form-item label="类型" required>
@@ -64,22 +55,10 @@ import { useUserStore } from '@/stores/user'
 
 const store = useUserStore()
 const complaints = ref([])
+const submitModal = reactive({ open: false, type: 'complaint', content: '', isAnonymous: false, loading: false })
 
-const submitModal = reactive({
-  open: false, type: 'complaint', content: '', isAnonymous: false, loading: false
-})
-
-function truncate(s, max) {
-  if (!s) return ''
-  return s.length > max ? s.slice(0, max) + '...' : s
-}
-
-function statusLabel(s) {
-  return { pending: '待处理', processing: '处理中', resolved: '已解决' }[s] || s
-}
-function statusTagColor(s) {
-  return { pending: 'default', processing: 'orange', resolved: 'green' }[s] || 'default'
-}
+const stsLabel = (s) => ({ pending:'待处理', processing:'处理中', resolved:'已解决' }[s] || s)
+const stsColor = (s) => ({ pending:'default', processing:'orange', resolved:'green' }[s] || 'default')
 
 async function fetchComplaints() {
   const ownerId = store.ownerId
@@ -95,15 +74,11 @@ function openSubmit() {
 }
 
 async function doSubmit() {
-  if (!submitModal.content) {
-    message.warning('请输入内容')
-    return
-  }
+  if (!submitModal.content) { message.warning('请输入内容'); return }
   submitModal.loading = true
   try {
-    const ownerId = store.ownerId
     await http.post('/complaints', {
-      owner: { ownerId },
+      owner: { ownerId: store.ownerId },
       type: submitModal.type,
       content: submitModal.content,
       isAnonymous: submitModal.isAnonymous
@@ -111,33 +86,59 @@ async function doSubmit() {
     message.success('提交成功')
     submitModal.open = false
     await fetchComplaints()
-  } catch {
-    // error handled by interceptor
-  } finally {
-    submitModal.loading = false
-  }
+  } catch { /* interceptor */ }
+  finally { submitModal.loading = false }
 }
 
 onMounted(fetchComplaints)
 </script>
 
 <style scoped>
-.complaint-content {
-  color: #4b5563;
-  margin: 8px 0;
+.complaint-card {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-lg);
+  padding: 24px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition);
+}
+.complaint-card:hover { box-shadow: var(--shadow-md); }
+
+.complaint-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.complaint-time { font-size: 12px; color: var(--c-muted); margin-left: auto; }
+
+.complaint-body {
+  margin: 0 0 0;
+  color: var(--c-ink-soft);
+  line-height: 1.7;
   white-space: pre-wrap;
 }
+
 .complaint-reply {
-  background: #f5f0ff;
-  border-left: 3px solid #7c3aed;
-  padding: 10px 14px;
-  margin: 8px 0;
-  border-radius: 0 4px 4px 0;
-  font-size: 13px;
-  color: #4b5563;
+  margin-top: 14px;
+  background: var(--c-ivory-deep);
+  border-left: 3px solid var(--c-copper);
+  padding: 14px 16px;
+  border-radius: 0 6px 6px 0;
 }
 .reply-label {
+  font-size: 12px;
   font-weight: 600;
-  color: #7c3aed;
+  color: var(--c-copper);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
+.reply-text {
+  margin: 6px 0 4px;
+  color: var(--c-ink-soft);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.reply-time { font-size: 11px; color: var(--c-muted-light); }
 </style>

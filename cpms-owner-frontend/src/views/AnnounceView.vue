@@ -5,23 +5,22 @@
       <p>了解社区最新动态</p>
     </div>
 
-    <a-card v-for="a in announces" :key="a.announcementId" style="margin-bottom:12px" size="small" hoverable @click="showDetail(a)">
-      <div style="cursor:pointer">
-        <div style="display:flex; justify-content:space-between; align-items:center">
-          <h4 style="margin:0; font-size:15px; font-weight:600">{{ a.title }}</h4>
-          <span style="font-size:12px; color:#787580">{{ dayjs(a.publishTime).format('YYYY-MM-DD HH:mm') }}</span>
-        </div>
-        <p style="margin:8px 0 0; color:#6b6778; font-size:13px">{{ truncate(a.content, 100) }}</p>
+    <div v-for="(a, i) in announces" :key="a.announcementId" class="announce-card" @click="showDetail(a)">
+      <div class="announce-index num-display">{{ String(i + 1).padStart(2, '0') }}</div>
+      <div class="announce-main">
+        <h4 class="announce-title">{{ a.title }}</h4>
+        <p class="announce-excerpt">{{ truncate(a.content, 80) }}</p>
+        <span class="announce-time">{{ dayjs(a.publishTime).format('YYYY年M月D日 HH:mm') }}</span>
       </div>
-    </a-card>
+    </div>
 
     <a-empty v-if="announces.length === 0" description="暂无公告" />
 
-    <a-modal v-model:open="detail.open" :title="detail.title" :footer="null" width="600px">
-      <p style="white-space:pre-wrap">{{ detail.content }}</p>
-      <p style="color:#787580; font-size:12px; margin-top:16px">
+    <a-modal v-model:open="detail.open" :title="detail.title" :footer="null" width="560px">
+      <p style="white-space:pre-wrap;line-height:1.8">{{ detail.content }}</p>
+      <p style="color:var(--c-muted);font-size:12px;margin-top:16px">
         发布时间：{{ detail.time }}
-        <span v-if="detail.publisher"> · 发布者：{{ detail.publisher }}</span>
+        <span v-if="detail.publisher"> · {{ detail.publisher }}</span>
       </p>
     </a-modal>
   </div>
@@ -31,11 +30,8 @@
 import { onMounted, reactive, ref } from 'vue'
 import dayjs from 'dayjs'
 import http from '@/api'
-import { useUserStore } from '@/stores/user'
 
-const store = useUserStore()
 const announces = ref([])
-
 const detail = reactive({ open: false, title: '', content: '', time: '', publisher: '' })
 
 function truncate(s, max) {
@@ -55,3 +51,49 @@ onMounted(async () => {
   announces.value = await http.get('/announcements') || []
 })
 </script>
+
+<style scoped>
+.announce-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-lg);
+  padding: 24px 28px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition);
+}
+.announce-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--c-muted-light);
+}
+
+.announce-index {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--c-muted-light);
+  flex-shrink: 0;
+  width: 36px;
+}
+
+.announce-main { flex: 1; }
+.announce-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--c-ink);
+}
+.announce-excerpt {
+  margin: 6px 0;
+  color: var(--c-ink-soft);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.announce-time {
+  font-size: 12px;
+  color: var(--c-muted-light);
+}
+</style>

@@ -7,43 +7,53 @@
 
     <a-row :gutter="24">
       <a-col :span="12">
-        <a-card title="我的车位" size="small">
-          <div v-if="mySpots.length === 0" style="text-align:center; color:#c4c0d0; padding:24px">暂无绑定车位</div>
-          <div v-for="s in mySpots" :key="s.spotId" class="info-row">
-            <div class="info-label">车位编号</div>
-            <div class="info-value">{{ s.spotCode }}</div>
-            <div class="info-label">位置</div>
-            <div class="info-value">{{ s.location }}</div>
-            <div class="info-label">类型</div>
-            <div class="info-value">{{ s.type }}</div>
-            <div class="info-label">状态</div>
-            <div class="info-value">
-              <a-tag :color="s.status === 'occupied' ? 'green' : s.status === 'available' ? 'blue' : 'orange'">
-                {{ spotStatusLabel(s.status) }}
-              </a-tag>
+        <div class="info-card">
+          <div class="info-card-head">
+            <h3>我的车位</h3>
+          </div>
+          <div class="info-card-body">
+            <div v-if="mySpots.length === 0" class="info-empty">暂无绑定车位</div>
+            <div v-for="s in mySpots" :key="s.spotId" class="info-grid">
+              <div class="info-item">
+                <span class="info-key">编号</span>
+                <span class="info-val">{{ s.spotCode }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-key">位置</span>
+                <span class="info-val">{{ s.location }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-key">类型</span>
+                <span class="info-val">{{ s.type }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-key">状态</span>
+                <a-tag :color="s.status === 'occupied' ? 'green' : s.status === 'available' ? 'blue' : 'orange'" size="small">
+                  {{ spotLabel(s.status) }}
+                </a-tag>
+              </div>
             </div>
           </div>
-        </a-card>
+        </div>
       </a-col>
       <a-col :span="12">
-        <a-card title="我的车辆" size="small">
-          <template #extra>
+        <div class="info-card">
+          <div class="info-card-head">
+            <h3>我的车辆</h3>
             <a-button type="primary" size="small" @click="openAddVehicle">登记车辆</a-button>
-          </template>
-          <div v-if="vehicles.length === 0" style="text-align:center; color:#c4c0d0; padding:24px">暂无车辆</div>
-          <div v-for="v in vehicles" :key="v.vehicleId" class="info-row">
-            <div class="info-label">车牌号</div>
-            <div class="info-value" style="font-weight:600; font-size:15px">{{ v.plateNumber }}</div>
-            <div class="info-label">类型 / 颜色</div>
-            <div class="info-value">{{ v.vehicleType }} / {{ v.color }}</div>
-            <div class="info-label">绑定车位</div>
-            <div class="info-value">{{ v.spot?.spotCode || '未绑定' }}</div>
           </div>
-        </a-card>
+          <div class="info-card-body">
+            <div v-if="vehicles.length === 0" class="info-empty">暂无车辆</div>
+            <div v-for="v in vehicles" :key="v.vehicleId" class="vehicle-row">
+              <div class="vehicle-plate num-display">{{ v.plateNumber }}</div>
+              <div class="vehicle-meta">{{ v.vehicleType || '-' }} / {{ v.color || '-' }}</div>
+              <div class="vehicle-spot">车位：{{ v.spot?.spotCode || '未绑定' }}</div>
+            </div>
+          </div>
+        </div>
       </a-col>
     </a-row>
 
-    <!-- 登记车辆 Modal -->
     <a-modal v-model:open="vehicleModal.open" title="登记车辆" @ok="doAddVehicle" :confirmLoading="vehicleModal.loading">
       <a-form layout="vertical">
         <a-form-item label="车牌号" required>
@@ -77,26 +87,16 @@ const store = useUserStore()
 const vehicles = ref([])
 const mySpots = ref([])
 const availableSpots = ref([])
+const vehicleModal = reactive({ open: false, plateNumber: '', vehicleType: '', color: '', spotId: undefined, loading: false })
 
-const vehicleModal = reactive({
-  open: false, plateNumber: '', vehicleType: '', color: '', spotId: undefined, loading: false
-})
-
-function spotStatusLabel(s) {
-  return { available: '可用', occupied: '使用中', maintenance: '维护中' }[s] || s
-}
+const spotLabel = (s) => ({ available:'可用', occupied:'使用中', maintenance:'维护中' }[s] || s)
 
 async function fetchData() {
   const ownerId = store.ownerId
   if (!ownerId) return
   vehicles.value = await http.get(`/parking/vehicles?ownerId=${ownerId}`) || []
-
-  const spots = vehicles.value
-    .filter(v => v.spot)
-    .map(v => v.spot)
-    .filter((s, i, arr) => arr.findIndex(x => x.spotId === s.spotId) === i)
-  mySpots.value = spots
-
+  const spots = vehicles.value.filter(v => v.spot).map(v => v.spot)
+  mySpots.value = spots.filter((s, i, arr) => arr.findIndex(x => x.spotId === s.spotId) === i)
   availableSpots.value = await http.get('/parking/spots?available=true') || []
 }
 
@@ -109,50 +109,70 @@ function openAddVehicle() {
 }
 
 async function doAddVehicle() {
-  if (!vehicleModal.plateNumber) {
-    message.warning('请输入车牌号')
-    return
-  }
+  if (!vehicleModal.plateNumber) { message.warning('请输入车牌号'); return }
   vehicleModal.loading = true
   try {
-    const body = {
-      owner: { ownerId: store.ownerId },
-      plateNumber: vehicleModal.plateNumber,
-      vehicleType: vehicleModal.vehicleType,
-      color: vehicleModal.color
-    }
-    if (vehicleModal.spotId) {
-      body.spot = { spotId: vehicleModal.spotId }
-    }
+    const body = { owner: { ownerId: store.ownerId }, plateNumber: vehicleModal.plateNumber, vehicleType: vehicleModal.vehicleType, color: vehicleModal.color }
+    if (vehicleModal.spotId) body.spot = { spotId: vehicleModal.spotId }
     await http.post('/parking/vehicles', body)
     message.success('车辆登记成功')
     vehicleModal.open = false
     await fetchData()
-  } catch {
-    // error handled by interceptor
-  } finally {
-    vehicleModal.loading = false
-  }
+  } catch { /* interceptor */ }
+  finally { vehicleModal.loading = false }
 }
 
 onMounted(fetchData)
 </script>
 
 <style scoped>
-.info-row {
-  display: grid;
-  grid-template-columns: 80px 1fr;
-  gap: 4px 12px;
-  padding: 8px 0;
-  border-bottom: 1px solid #f0ede8;
+.info-card {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.info-card-head {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--c-border-light);
 }
-.info-row:last-child { border-bottom: none; }
-.info-label {
-  font-size: 12px;
-  color: #787580;
+.info-card-head h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
 }
-.info-value {
-  font-size: 14px;
+.info-card-body { padding: 20px 24px; }
+.info-empty {
+  text-align: center;
+  color: var(--c-muted-light);
+  padding: 28px 0;
+  font-size: 13px;
 }
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.info-item { }
+.info-key { display: block; font-size: 11px; color: var(--c-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+.info-val { font-size: 15px; font-weight: 500; }
+
+.vehicle-row {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--c-border-light);
+}
+.vehicle-row:last-child { border-bottom: none; }
+.vehicle-plate {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--c-ink);
+}
+.vehicle-meta { font-size: 13px; color: var(--c-muted); margin-top: 2px; }
+.vehicle-spot { font-size: 12px; color: var(--c-muted-light); margin-top: 2px; }
 </style>

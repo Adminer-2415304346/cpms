@@ -2,35 +2,42 @@
   <div class="profile-page">
     <div class="page-header">
       <h2>个人中心</h2>
-      <p>查看个人信息与修改密码</p>
+      <p>查看个人信息与安全设置</p>
     </div>
 
-    <a-card title="基本信息" style="margin-bottom:24px" size="small">
-      <div class="info-grid">
-        <div class="info-row">
-          <span class="info-label">姓名</span>
-          <span class="info-value">{{ profile.name || '-' }}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">手机号</span>
-          <span class="info-value">{{ profile.phone || '-' }}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">身份证号</span>
-          <span class="info-value">{{ profile.idCard || '-' }}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">入住时间</span>
-          <span class="info-value">{{ profile.moveInDate || '-' }}</span>
+    <div class="profile-card">
+      <div class="profile-avatar">
+        <a-avatar :size="72" :style="{ backgroundColor: '#c1784e', fontFamily: 'var(--font-display)', fontSize: '30px' }">
+          {{ initial }}
+        </a-avatar>
+        <div>
+          <p class="profile-name">{{ store.realName || store.username }}</p>
+          <a-tag color="#c1784e" size="small">业主</a-tag>
         </div>
       </div>
-    </a-card>
 
-    <a-card title="安全设置" size="small">
+      <a-divider />
+
+      <div class="profile-details">
+        <div class="detail-row">
+          <span class="detail-label">手机号</span>
+          <span class="detail-value">{{ profile.phone || '-' }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">身份证号</span>
+          <span class="detail-value">{{ profile.idCard || '-' }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">入住时间</span>
+          <span class="detail-value">{{ profile.moveInDate || '-' }}</span>
+        </div>
+      </div>
+
+      <a-divider />
+
       <a-button @click="openPwd">修改密码</a-button>
-    </a-card>
+    </div>
 
-    <!-- 修改密码 Modal -->
     <a-modal v-model:open="pwdModal.open" title="修改密码" @ok="doChangePwd" :confirmLoading="pwdModal.loading">
       <a-form layout="vertical">
         <a-form-item label="当前密码" required>
@@ -48,16 +55,18 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
 import http from '@/api'
 import { useUserStore } from '@/stores/user'
 
 const store = useUserStore()
-const profile = reactive({ name: '', phone: '', idCard: '', moveInDate: '' })
+const profile = reactive({ phone: '', idCard: '', moveInDate: '' })
+const pwdModal = reactive({ open: false, oldPwd: '', newPwd: '', confirmPwd: '', loading: false })
 
-const pwdModal = reactive({
-  open: false, oldPwd: '', newPwd: '', confirmPwd: '', loading: false
+const initial = computed(() => {
+  const n = store.realName || store.username
+  return n ? n.charAt(0) : 'U'
 })
 
 onMounted(async () => {
@@ -66,14 +75,11 @@ onMounted(async () => {
   try {
     const data = await http.get(`/owners/${ownerId}`)
     if (data) {
-      profile.name = data.name
-      profile.phone = data.phone
-      profile.idCard = data.idCard
-      profile.moveInDate = data.moveInDate
+      profile.phone = data.phone || ''
+      profile.idCard = data.idCard || ''
+      profile.moveInDate = data.moveInDate || ''
     }
-  } catch {
-    // silent
-  }
+  } catch { /* silent */ }
 })
 
 function openPwd() {
@@ -84,48 +90,58 @@ function openPwd() {
 }
 
 async function doChangePwd() {
-  if (!pwdModal.oldPwd || !pwdModal.newPwd) {
-    message.warning('请填写密码')
-    return
-  }
-  if (pwdModal.newPwd !== pwdModal.confirmPwd) {
-    message.warning('两次输入的新密码不一致')
-    return
-  }
+  if (!pwdModal.oldPwd || !pwdModal.newPwd) { message.warning('请填写密码'); return }
+  if (pwdModal.newPwd !== pwdModal.confirmPwd) { message.warning('两次输入的新密码不一致'); return }
   pwdModal.loading = true
   try {
-    await http.put(`/users/${store.userId}`, {
-      password: pwdModal.newPwd
-    })
+    await http.put(`/users/${store.userId}`, { password: pwdModal.newPwd })
     message.success('密码修改成功')
     pwdModal.open = false
-  } catch {
-    // error handled by interceptor
-  } finally {
-    pwdModal.loading = false
-  }
+  } catch { /* interceptor */ }
+  finally { pwdModal.loading = false }
 }
 </script>
 
 <style scoped>
-.info-grid {
-  max-width: 480px;
+.profile-card {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-lg);
+  padding: 32px;
+  box-shadow: var(--shadow-sm);
+  max-width: 600px;
 }
-.info-row {
+
+.profile-avatar {
   display: flex;
-  padding: 10px 0;
-  border-bottom: 1px solid #f0ede8;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 4px;
 }
-.info-row:last-child { border-bottom: none; }
-.info-label {
+.profile-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--c-ink);
+}
+
+.profile-details { margin: 0; }
+.detail-row {
+  display: flex;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--c-border-light);
+}
+.detail-row:last-child { border-bottom: none; }
+.detail-label {
   width: 100px;
-  color: #787580;
-  font-size: 14px;
   flex-shrink: 0;
+  font-size: 13px;
+  color: var(--c-muted);
 }
-.info-value {
+.detail-value {
   font-size: 14px;
   font-weight: 500;
-  color: #1e1b2e;
+  color: var(--c-ink-soft);
 }
 </style>
