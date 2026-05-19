@@ -149,3 +149,36 @@
   - 架构选型待定：同项目路由拆分 vs 独立前端项目
   - 设计工具：将继续使用 impeccable + frontend-design 技能
 - 本轮为规划启动，实际开发将在新目录中进行
+
+---
+
+### [2026-05-19] 第七轮：业主端门户完整实现
+
+- 断开副本的 GitHub remote，纯本地开发
+- 确定架构：**独立前端项目** `cpms-owner-frontend/`，与 `cpms-fontend/` 平级，共用 `cpms-backend/`
+- 确定设计方向：桌面端、温暖信赖（延续紫蓝基因）、全宽卡片式布局、7 模块全保留
+- 设计方案写入 `docs/superpowers/specs/2026-05-19-owner-portal-design.md`
+- 实现计划写入 `docs/superpowers/plans/2026-05-19-owner-portal.md`
+
+**新增 (Added)**：
+- `cpms-owner-frontend/` 完整 Vue 3 项目（14 个源文件）
+  - 项目脚手架：`package.json`、`vite.config.js`（port 3001）、`index.html`
+  - 核心入口：`main.js`、`App.vue`（ConfigProvider + fade 过渡）
+  - 数据层：`api/index.js`（Axios 封装）、`stores/user.js`（Pinia + ownerId 扩展）
+  - 路由：`router/index.js`（7 路由 + 登录守卫）
+  - 布局：`layouts/OwnerLayout.vue`（白色顶栏 + 全宽 1200px 内容区）
+  - 全局样式：`styles/global.css`（暖灰白底 #faf9f7、紫罗兰主色 #7c3aed、琥珀点缀 #f59e0b，Restrained 策略）
+  - 页面：
+    - `LoginView.vue` — 简约居中登录页，登录后解析 ownerId
+    - `HomeView.vue` — 欢迎横幅 + 3 统计卡片（真实 API 数据）+ 最近报修/公告
+    - `BillView.vue` — 按房产分组账单列表 + 缴费 Modal
+    - `RepairView.vue` — 报修列表 + 步骤条状态追踪 + 提交报修 + 确认完工
+    - `ComplaintView.vue` — 投诉列表（含物业回复）+ 提交投诉/建议
+    - `AnnounceView.vue` — 公告列表 + 详情 Modal
+    - `ParkingView.vue` — 我的车位（从车辆推断）+ 车辆列表 + 登记车辆
+    - `ProfileView.vue` — 个人基本信息 + 修改密码
+
+**构建验证**：
+- `npm install` — 153 packages，零漏洞
+- `npm run build` — 3250 模块，零错误，6.90s
+- 共计 9 次 Git 提交
