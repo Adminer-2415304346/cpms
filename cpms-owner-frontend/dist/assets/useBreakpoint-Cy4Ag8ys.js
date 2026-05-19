@@ -1,0 +1,1 @@
+import{u as r}from"./colors-Bkt7dCnH.js";import{as as u,at as a,aH as t}from"./index-DH1_PqFT.js";function v(){const e=t({});let s=null;const n=r();return u(()=>{s=n.value.subscribe(o=>{e.value=o})}),a(()=>{n.value.unsubscribe(s)}),e}export{v as u};
