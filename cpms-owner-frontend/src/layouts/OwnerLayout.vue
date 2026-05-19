@@ -1,34 +1,28 @@
 <template>
   <a-layout class="owner-layout">
-    <!-- 顶栏 -->
     <a-layout-header class="owner-header">
       <div class="header-inner">
-        <div class="header-left" @click="router.push('/home')">
-          <div class="brand-logo">
-            <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
-              <rect width="32" height="32" rx="8" fill="#7c3aed"/>
-              <path d="M8 22V12l6 8 4-4 6 6" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-            </svg>
-          </div>
-          <span class="brand-name">CPMS</span>
-          <span class="brand-sub">业主服务</span>
+        <div class="header-brand" @click="router.push('/home')">
+          <span class="brand-mark">CPMS</span>
+          <span class="brand-divider"></span>
+          <span class="brand-label">业主服务</span>
         </div>
+
         <nav class="header-nav">
-          <router-link to="/home" class="nav-item" :class="{ active: $route.path === '/home' }">首页</router-link>
-          <router-link to="/bills" class="nav-item" :class="{ active: $route.path === '/bills' }">我的账单</router-link>
-          <router-link to="/repairs" class="nav-item" :class="{ active: $route.path === '/repairs' }">报修维修</router-link>
-          <router-link to="/complaints" class="nav-item" :class="{ active: $route.path === '/complaints' }">投诉建议</router-link>
-          <router-link to="/announces" class="nav-item" :class="{ active: $route.path === '/announces' }">社区公告</router-link>
-          <router-link to="/parking" class="nav-item" :class="{ active: $route.path === '/parking' }">停车管理</router-link>
+          <router-link v-for="item in navItems" :key="item.path" :to="item.path" class="nav-link" :class="{ active: $route.path === item.path }">
+            {{ item.label }}
+          </router-link>
         </nav>
-        <div class="header-right">
-          <a-dropdown>
-            <a class="user-avatar-link">
-              <a-avatar :size="32" :style="{ backgroundColor: '#7c3aed' }">
+
+        <div class="header-user">
+          <a-dropdown placement="bottomRight">
+            <div class="user-trigger">
+              <a-avatar :size="34" :style="{ backgroundColor: '#c1784e', fontFamily: 'var(--font-ui)' }">
                 {{ displayName }}
               </a-avatar>
               <span class="user-name">{{ store.realName || store.username }}</span>
-            </a>
+              <DownOutlined style="font-size:10px;color:var(--c-muted)" />
+            </div>
             <template #overlay>
               <a-menu>
                 <a-menu-item key="profile" @click="router.push('/profile')">
@@ -45,7 +39,6 @@
       </div>
     </a-layout-header>
 
-    <!-- 内容区 -->
     <a-layout-content class="owner-content">
       <div class="content-inner">
         <router-view />
@@ -57,11 +50,20 @@
 <script setup>
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { UserOutlined, LogoutOutlined } from '@ant-design/icons-vue'
+import { UserOutlined, LogoutOutlined, DownOutlined } from '@ant-design/icons-vue'
 import { useUserStore } from '@/stores/user'
 
 const router = useRouter()
 const store = useUserStore()
+
+const navItems = [
+  { path: '/home', label: '首页' },
+  { path: '/bills', label: '我的账单' },
+  { path: '/repairs', label: '报修维修' },
+  { path: '/complaints', label: '投诉建议' },
+  { path: '/announces', label: '社区公告' },
+  { path: '/parking', label: '停车管理' }
+]
 
 const displayName = computed(() => {
   const name = store.realName || store.username
@@ -77,106 +79,124 @@ function handleLogout() {
 <style scoped>
 .owner-layout {
   min-height: 100vh;
-  background: #faf9f7;
+  background: var(--c-ivory);
 }
 
-/* 顶栏 */
+/* ---- Header ---- */
 .owner-header {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: #fff;
-  border-bottom: 1px solid #e8e5e0;
-  padding: 0 32px;
-  height: 56px;
-  line-height: 56px;
-  box-shadow: 0 1px 2px rgba(0,0,0,.03);
+  background: rgba(255,255,255,.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--c-border-light);
+  padding: 0 36px;
+  height: 60px;
+  line-height: 60px;
 }
 
 .header-inner {
   display: flex;
   align-items: center;
-  max-width: 1200px;
+  max-width: 1160px;
   margin: 0 auto;
-  height: 56px;
+  height: 60px;
 }
 
-.header-left {
+/* Brand */
+.header-brand {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   cursor: pointer;
   flex-shrink: 0;
 }
 
-.brand-name {
-  font-size: 18px;
+.brand-mark {
+  font-family: var(--font-display);
+  font-size: 22px;
   font-weight: 700;
-  color: #1e1b2e;
+  color: var(--c-ink);
   letter-spacing: -0.5px;
 }
 
-.brand-sub {
-  font-size: 12px;
-  color: #8e8a9e;
-  margin-left: 4px;
-  padding-left: 8px;
-  border-left: 1px solid #e8e5e0;
+.brand-divider {
+  width: 1px;
+  height: 18px;
+  background: var(--c-border);
 }
 
+.brand-label {
+  font-size: 12px;
+  color: var(--c-muted);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* Nav */
 .header-nav {
   display: flex;
   align-items: center;
-  gap: 4px;
-  margin-left: 48px;
+  gap: 2px;
+  margin: 0 auto;
 }
 
-.nav-item {
-  padding: 0 16px;
-  height: 56px;
-  line-height: 56px;
+.nav-link {
+  padding: 0 18px;
+  height: 60px;
+  line-height: 60px;
   text-decoration: none;
-  color: #6b6778;
+  color: var(--c-ink-soft);
   font-size: 14px;
   font-weight: 500;
-  border-bottom: 2px solid transparent;
-  transition: all 0.15s ease;
+  position: relative;
+  transition: color var(--transition);
 }
 
-.nav-item:hover {
-  color: #7c3aed;
+.nav-link:hover { color: var(--c-copper); }
+
+.nav-link.active {
+  color: var(--c-copper);
+}
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+  background: var(--c-copper);
 }
 
-.nav-item.active {
-  color: #7c3aed;
-  border-bottom-color: #7c3aed;
-}
-
-.header-right {
+/* User */
+.header-user {
+  flex-shrink: 0;
   margin-left: auto;
-  display: flex;
-  align-items: center;
 }
 
-.user-avatar-link {
+.user-trigger {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: #1e1b2e;
+  gap: 10px;
+  cursor: pointer;
 }
 
 .user-name {
   font-size: 14px;
   font-weight: 500;
+  color: var(--c-ink);
 }
 
-/* 内容区 */
+/* ---- Content ---- */
 .owner-content {
-  padding: 24px 32px;
+  padding: 36px;
 }
 
 .content-inner {
-  max-width: 1200px;
+  max-width: 1160px;
   margin: 0 auto;
 }
 </style>
