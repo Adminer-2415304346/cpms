@@ -11,6 +11,15 @@
 
 CPMS 是一个面向社区物业管理的 Web 信息系统，支持多角色权限（管理员 / 物业人员 / 业主），涵盖房产管理、费用收缴、报修处理、投诉建议、公告发布、停车位管理等核心业务。
 
+**当前版本: V1.1 — Serene Residence**
+
+### 前端项目
+
+| 项目 | 端口 | 用户 | 设计风格 |
+|------|------|------|----------|
+| `cpms-fontend/` | 3000 | 管理员 / 物业人员 | 紫蓝渐变 + 深色侧边栏 |
+| `cpms-owner-frontend/` | 3001 | 业主 | 暖象牙 + 陈年铜（Serene Residence） |
+
 ### 功能模块
 
 ```
@@ -84,7 +93,7 @@ mvn spring-boot:run
 
 后端运行在 `http://localhost:8080`
 
-### 4. 启动前端
+### 4. 启动管理后台前端
 
 ```bash
 cd cpms-fontend
@@ -93,9 +102,20 @@ npm install
 npm run dev
 ```
 
-浏览器打开 `http://localhost:3000`
+管理后台运行在 `http://localhost:3000`
 
-### 5. 登录
+### 5. 启业主端门户（V1.1）
+
+```bash
+cd cpms-owner-frontend
+
+npm install
+npm run dev
+```
+
+业主端运行在 `http://localhost:3001`
+
+### 6. 登录
 
 | 账号 | 密码 | 角色 |
 |------|------|------|
@@ -110,34 +130,39 @@ npm run dev
 ```
 cpms/
 ├── README.md
+├── CHANGELOG.md                  # 更新日志
 ├── conversation-log.md          # 对话记录
 ├── docs/
 │   ├── 需求分析.md               # Step 1: 需求分析文档
 │   ├── diagrams.md              # 思维导图 + 流程图 Mermaid 代码
 │   ├── er-diagram.md            # Step 2: ER 图 Mermaid 代码
 │   ├── schema.sql               # 完整建库建表脚本
-│   ├── 项目开发总结.md            # 数据库 + API 设计总结
+│   ├── 项目开发总结.md            # 数据库 + API + 双前端 设计总结
+│   ├── CHANGELOG.md              # 更新日志
 │   └── 问题排查日志.md            # 启动排错记录
 ├── photo/                       # Mermaid 绘制图表
-├── cpms-backend/                # Spring Boot 后端
-│   ├── pom.xml
-│   └── src/main/java/com/cpms/
-│       ├── entity/              # 12 个 JPA 实体
-│       ├── repository/          # 12 个数据访问接口
-│       ├── service/             # 10 个业务逻辑类
-│       ├── controller/          # 10 个 REST 控制器
-│       ├── config/              # CORS + 异常处理
-│       └── dto/                 # 数据传输对象
-└── cpms-fontend/                # Vue3 前端
+├── cpms-backend/                # Spring Boot 后端（共用）
+│   └── ...
+├── cpms-fontend/                # 管理后台前端（V1.0 — 物业/管理员）
+│   ├── package.json
+│   ├── vite.config.js
+│   └── src/
+│       ├── api/index.js         # Axios 封装
+│       ├── stores/user.js       # Pinia 用户状态
+│       ├── router/index.js      # 路由 + 鉴权
+│       ├── styles/global.css    # 紫蓝主题样式
+│       ├── layouts/MainLayout.vue
+│       └── views/               # 10 个功能页面
+└── cpms-owner-frontend/         # 业主端门户（V1.1 — Serene Residence）
     ├── package.json
-    ├── vite.config.js
+    ├── vite.config.js           # 端口 3001
     └── src/
         ├── api/index.js         # Axios 封装
-        ├── stores/user.js       # Pinia 用户状态
-        ├── router/index.js      # 路由 + 鉴权
-        ├── styles/global.css    # 全局主题样式
-        ├── layouts/MainLayout.vue
-        └── views/               # 10 个功能页面
+        ├── stores/user.js       # Pinia（ownerId 扩展）
+        ├── router/index.js      # 7 路由 + 登录守卫
+        ├── styles/global.css    # 暖象牙+铜色主题
+        ├── layouts/OwnerLayout.vue
+        └── views/               # 8 个业主页面
 ```
 
 ---
@@ -163,11 +188,19 @@ cpms/
 
 ## 🎨 设计特色
 
-- **紫蓝流光渐变 UI** — 登录页含浮动光斑动画 + Canvas 粒子网络
-- **侧边栏渐变** — 深紫到深蓝配色
+### 管理后台（V1.0）
+- **紫蓝渐变 UI** — 登录页含粒子网络 Canvas 动画
+- **深色侧边栏** — 深紫纯色 + 菜单滑动指示器
 - **毛玻璃顶栏** — `backdrop-filter` 模糊效果
 - **报修状态机** — 五阶段流转：待处理 → 已派工 → 处理中 → 已完成 → 已确认
 - **统一响应格式** — `{code, message, data}`
+
+### 业主端门户（V1.1 — Serene Residence）
+- **暖象牙底 + 陈年铜主色** — 温暖沉静，告别高饱和紫蓝
+- **Cormorant Garamond 展示字体** — 34px 问候语、38px 统计数字
+- **毛玻璃顶栏** — 铜色导航激活指示器
+- **分栏登录页** — 左侧品牌展示 + 右侧表单区
+- **编号式公告、圆角卡片报修、卡片化停车**
 
 ---
 
@@ -176,7 +209,7 @@ cpms/
 ```
 1. 需求分析       → docs/需求分析.md
 2. 功能设计       → docs/项目开发总结.md
-3. 功能实现       → cpms-backend/ + cpms-fontend/
+3. 功能实现       → cpms-backend/ + cpms-fontend/ + cpms-owner-frontend/
 4. 系统测试       → docs/问题排查日志.md
 5. 验收答辩       → 待完成
 ```
