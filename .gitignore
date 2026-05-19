@@ -28,3 +28,7 @@ Desktop.ini
 # ======= Temp =======
 *.tmp
 pptx_content.txt
+
+# ======= Skills =======
+.agents/
+skills-lock.json

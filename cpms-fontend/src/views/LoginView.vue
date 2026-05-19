@@ -79,8 +79,7 @@
               :loading="loading"
               class="login-btn"
             >
-              <span class="btn-text">登 录</span>
-              <span class="btn-shimmer"></span>
+              登 录
             </a-button>
           </a-form-item>
         </a-form>
@@ -206,7 +205,7 @@ onUnmounted(() => {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: #0f0a1a;
+  background: #0d0b14;
   overflow: hidden;
 }
 
@@ -214,8 +213,8 @@ onUnmounted(() => {
 .fluid-bg {
   position: absolute;
   inset: 0;
-  filter: blur(80px);
-  opacity: 0.7;
+  filter: blur(90px);
+  opacity: 0.55;
 }
 
 .orb {
@@ -226,7 +225,7 @@ onUnmounted(() => {
 .orb-1 {
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, rgba(124,58,237,0.6) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(109, 40, 217, 0.45) 0%, transparent 70%);
   top: -200px;
   left: -100px;
   animation: float1 18s ease-in-out infinite;
@@ -235,7 +234,7 @@ onUnmounted(() => {
 .orb-2 {
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(59,130,246,0.5) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(180, 83, 52, 0.3) 0%, transparent 70%);
   bottom: -250px;
   right: -150px;
   animation: float2 22s ease-in-out infinite;
@@ -244,7 +243,7 @@ onUnmounted(() => {
 .orb-3 {
   width: 350px;
   height: 350px;
-  background: radial-gradient(circle, rgba(139,92,246,0.45) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, transparent 70%);
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -254,7 +253,7 @@ onUnmounted(() => {
 .orb-4 {
   width: 280px;
   height: 280px;
-  background: radial-gradient(circle, rgba(99,102,241,0.4) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(82, 67, 170, 0.35) 0%, transparent 70%);
   top: 10%;
   right: 20%;
   animation: float4 20s ease-in-out infinite;
@@ -263,7 +262,7 @@ onUnmounted(() => {
 .orb-5 {
   width: 400px;
   height: 400px;
-  background: radial-gradient(circle, rgba(167,139,250,0.35) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, transparent 70%);
   bottom: 10%;
   left: 10%;
   animation: float5 25s ease-in-out infinite;
@@ -335,7 +334,7 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(160deg, #1a0533 0%, #2d1065 30%, #1e3a8a 70%, #1e40af 100%);
+  background: linear-gradient(165deg, #14101f 0%, #1d1535 50%, #1e1a3a 100%);
   padding: 48px 36px;
   position: relative;
 }
@@ -444,36 +443,14 @@ onUnmounted(() => {
   letter-spacing: 5px;
   border-radius: 10px;
   border: none;
-  background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 50%, #3b82f6 100%);
-  position: relative;
-  overflow: hidden;
-  transition: all 0.4s ease;
+  background: #6d28d9;
   font-weight: 500;
+  transition: background 0.15s ease;
 }
 
 .login-btn:hover {
-  background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 50%, #60a5fa 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 8px 30px rgba(124,58,237,0.4);
-}
-
-.login-btn:active {
-  transform: translateY(0);
-}
-
-.btn-shimmer {
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-  animation: shimmer 3s infinite;
-}
-
-@keyframes shimmer {
-  0% { left: -100%; }
-  50%, 100% { left: 100%; }
+  background: #7c3aed;
+  box-shadow: 0 4px 16px rgba(109, 40, 217, 0.3);
 }
 
 /* ====== 页脚 ====== */

@@ -198,28 +198,9 @@ const handleLogout = () => {
 
 /* ====== 侧边栏 ====== */
 .layout-sider {
-  background: linear-gradient(195deg, #100524 0%, #1a0a3a 25%, #1e1048 50%, #162040 100%) !important;
-  box-shadow: 6px 0 40px rgba(0,0,0,0.35);
+  background: #14101f !important;
+  box-shadow: 4px 0 32px rgba(0,0,0,0.25);
   position: relative;
-  overflow: hidden;
-}
-
-/* 侧边栏微光 */
-.layout-sider::before {
-  content: '';
-  position: absolute;
-  top: -30%;
-  right: -40%;
-  width: 300px;
-  height: 600px;
-  background: radial-gradient(ellipse, rgba(124,58,237,0.08) 0%, transparent 70%);
-  pointer-events: none;
-  animation: sidebar-glow 8s ease-in-out infinite;
-}
-
-@keyframes sidebar-glow {
-  0%, 100% { opacity: 0.5; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.2); }
 }
 
 .logo-area {
@@ -256,10 +237,8 @@ const handleLogout = () => {
 
 .logo-text {
   font-size: 18px;
-  font-weight: 800;
-  background: linear-gradient(135deg, #c4b5fd, #a5b4fc, #93c5fd);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+  color: #e4dcf8;
   letter-spacing: 2px;
 }
 
@@ -284,8 +263,6 @@ const handleLogout = () => {
 .side-menu {
   background: transparent !important;
   border-right: none !important;
-  position: relative;
-  z-index: 1;
 }
 
 .side-menu :deep(.ant-menu-item) {
@@ -293,9 +270,9 @@ const handleLogout = () => {
   border-radius: 10px;
   height: 44px;
   line-height: 44px;
-  color: rgba(255,255,255,0.55);
+  color: rgba(255,255,255,0.52);
   font-size: 14px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.15s ease;
   position: relative;
   overflow: hidden;
 }
@@ -323,10 +300,9 @@ const handleLogout = () => {
 }
 
 .side-menu :deep(.ant-menu-item-selected) {
-  background: linear-gradient(135deg, rgba(124,58,237,0.3), rgba(79,70,229,0.18)) !important;
+  background: rgba(139, 92, 246, 0.2) !important;
   color: #fff !important;
   font-weight: 500;
-  box-shadow: 0 4px 20px rgba(124,58,237,0.12), inset 0 1px 0 rgba(255,255,255,0.05);
 }
 
 .side-menu :deep(.ant-menu-item .anticon) {
@@ -340,26 +316,6 @@ const handleLogout = () => {
 
 .side-menu :deep(.ant-menu-item-selected::after) {
   display: none;
-}
-
-/* 菜单项交错入场 */
-.side-menu :deep(.ant-menu-item) {
-  animation: menu-item-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-.side-menu :deep(.ant-menu-item:nth-child(1)) { animation-delay: 0.02s; }
-.side-menu :deep(.ant-menu-item:nth-child(2)) { animation-delay: 0.06s; }
-.side-menu :deep(.ant-menu-item:nth-child(3)) { animation-delay: 0.10s; }
-.side-menu :deep(.ant-menu-item:nth-child(4)) { animation-delay: 0.14s; }
-.side-menu :deep(.ant-menu-item:nth-child(5)) { animation-delay: 0.18s; }
-.side-menu :deep(.ant-menu-item:nth-child(6)) { animation-delay: 0.22s; }
-.side-menu :deep(.ant-menu-item:nth-child(7)) { animation-delay: 0.26s; }
-.side-menu :deep(.ant-menu-item:nth-child(8)) { animation-delay: 0.30s; }
-.side-menu :deep(.ant-menu-item:nth-child(9)) { animation-delay: 0.34s; }
-.side-menu :deep(.ant-menu-item:nth-child(10)) { animation-delay: 0.38s; }
-
-@keyframes menu-item-in {
-  from { opacity: 0; transform: translateX(-16px); }
-  to { opacity: 1; transform: translateX(0); }
 }
 
 /* ====== 顶栏 ====== */
@@ -396,9 +352,8 @@ const handleLogout = () => {
 }
 
 .trigger-icon:hover {
-  color: #7c3aed;
-  background: rgba(124,58,237,0.07);
-  transform: rotate(90deg);
+  color: var(--cpms-accent, #6d28d9);
+  background: rgba(109, 40, 217, 0.06);
 }
 
 .header-breadcrumb :deep(.ant-breadcrumb-link) {
@@ -407,14 +362,8 @@ const handleLogout = () => {
 }
 
 .breadcrumb-current {
-  color: #4b5563;
+  color: var(--cpms-text, #1e1b2e);
   font-weight: 500;
-  animation: breadcrumb-in 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-@keyframes breadcrumb-in {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 .header-right {
@@ -508,12 +457,7 @@ const handleLogout = () => {
 }
 
 .content-wrapper {
-  animation: content-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@keyframes content-in {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  padding: 0;
 }
 
 /* ====== 页脚 ====== */
@@ -523,8 +467,6 @@ const handleLogout = () => {
   background: transparent;
   padding: 16px;
   letter-spacing: 2px;
-  background: linear-gradient(90deg, transparent, rgba(124,58,237,0.3), transparent);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #a8a3b8;
 }
 </style>
