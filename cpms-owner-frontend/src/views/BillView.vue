@@ -22,7 +22,7 @@
         </a-table-column>
         <a-table-column title="账期" dataIndex="period" width="120" />
         <a-table-column title="截止日期" dataIndex="dueDate" width="120" />
-        <a-table-column title="状态" width="100">
+        <a-table-column title="状态" dataIndex="status" width="100">
           <template #default="{ text }">
             <a-tag v-if="text==='paid'" color="green">已缴</a-tag>
             <a-tag v-else-if="text==='overdue'" color="red">逾期</a-tag>
